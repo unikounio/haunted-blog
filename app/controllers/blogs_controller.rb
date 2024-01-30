@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class BlogsController < ApplicationController
-  skip_before_action :authenticate_user!, except: %i[new edit create update destroy]
+  skip_before_action :authenticate_user!, only: %i[index show]
 
-  before_action :set_blog, except: %i[index new edit create update destroy]
+  before_action :set_blog, only: [:show]
   before_action :set_blog_for_owner, only: %i[edit update destroy]
 
   def index
