@@ -4,6 +4,7 @@ class BlogsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[index show]
 
   before_action :set_blog, only: [:show]
+  before_action :check_authority, only: [:show]
   before_action :set_blog_for_owner, only: %i[edit update destroy]
 
   def index
@@ -44,13 +45,20 @@ class BlogsController < ApplicationController
 
   private
 
-  def set_blog_for_owner
-    @blog = current_user.blogs.find(params[:id])
-  end
-
   def set_blog
     @blog = Blog.find(params[:id])
-    raise ActiveRecord::RecordNotFound if @blog.secret && (current_user.nil? || !@blog.owned_by?(current_user))
+  end
+
+  def check_authority
+    raise ActiveRecord::RecordNotFound if @blog.secret && unauthorized?
+  end
+
+  def unauthorized?
+    current_user.nil? || !@blog.owned_by?(current_user)
+  end
+
+  def set_blog_for_owner
+    @blog = current_user.blogs.find(params[:id])
   end
 
   def blog_params
