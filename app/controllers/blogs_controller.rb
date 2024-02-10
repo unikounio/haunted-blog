@@ -50,7 +50,7 @@ class BlogsController < ApplicationController
   end
 
   def check_authority
-    raise ActiveRecord::RecordNotFound if @blog.secret && unauthorized?
+    @blog = Blog.find_by!(id: params[:id], secret: false) if @blog.secret && unauthorized?
   end
 
   def unauthorized?
