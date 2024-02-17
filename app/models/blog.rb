@@ -9,7 +9,7 @@ class Blog < ApplicationRecord
 
   scope :published, -> { where('secret = FALSE') }
 
-  scope :published_or_owned_by, ->(user) { published.or(where(user:)) }
+  scope :viewable_by, ->(user) { published.or(where(user:)) }
 
   scope :search, ->(term) { where('title LIKE :term OR content LIKE :term', term: "%#{term.present? ? sanitize_sql_like(term) : ''}%") }
 
