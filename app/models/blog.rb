@@ -11,11 +11,19 @@ class Blog < ApplicationRecord
 
   scope :published_or_owned_by, ->(user) { published.or(where(user:)) }
 
-  scope :search, ->(term) { where('title LIKE :term OR content LIKE :term', term: "%#{sanitize_sql_like(term)}%") if term.present? }
+  scope :search, ->(term) { where('title LIKE :term OR content LIKE :term', term: "%#{term.present? ? sanitize_sql_like(term) : ''}%") }
 
   scope :default_order, -> { order(id: :desc) }
 
   def owned_by?(target_user)
     user == target_user
+  end
+
+  def self.sanitize_term(term)
+    if term.present?
+      sanitize_sql_like(term)
+    else
+      term
+    end
   end
 end
