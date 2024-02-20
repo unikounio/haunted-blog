@@ -11,7 +11,7 @@ class Blog < ApplicationRecord
 
   scope :viewable_by, ->(user) { published.or(where(user:)) }
 
-  scope :search, ->(term) { where('title LIKE :term OR content LIKE :term', term: "%#{term.present? ? sanitize_sql_like(term) : ''}%") }
+  scope :search, ->(term) { where('title LIKE :term OR content LIKE :term', term: "%#{sanitize_sql_like(term.to_s)}%") }
 
   scope :default_order, -> { order(id: :desc) }
 
