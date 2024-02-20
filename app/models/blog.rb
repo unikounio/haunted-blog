@@ -18,12 +18,4 @@ class Blog < ApplicationRecord
   def owned_by?(target_user)
     user == target_user
   end
-
-  def self.sanitize_term(term)
-    if term.present?
-      sanitize_sql_like(term)
-    else
-      term
-    end
-  end
 end
